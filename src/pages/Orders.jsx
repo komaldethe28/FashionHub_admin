@@ -8,6 +8,16 @@ import { toast } from 'react-toastify'
 const Orders = ({ token }) => {
   const [orders, setOrders] = useState([])
 
+  const getStatusColor = (status) => {
+    const key = (status || '').toLowerCase()
+    if (key.includes('order')) return 'bg-green-500'
+    if (key.includes('packing')) return 'bg-yellow-500'
+    if (key.includes('shipped')) return 'bg-blue-500'
+    if (key.includes('out')) return 'bg-indigo-500'
+    if (key.includes('deliver')) return 'bg-green-700'
+    return 'bg-gray-300'
+  }
+
   const fetchOrders = async () => {
     if (!token) {
       console.log('No token available')
@@ -94,14 +104,19 @@ const Orders = ({ token }) => {
               </div>
               <div className='mt-4 flex items-center justify-between'>
                 <p className='text-lg font-semibold'>{currency} {order.amount}</p>
-                
-                <select onChange={(event)=>statusHandler(event, order._id)} value={order.status} className='border px-3 py-1 rounded'>
-                  <option value="OrderPlaced">Order Placed</option>
-                  <option value="Packing">Packing</option>
-                  <option value="Shipped">Shipped</option>
-                  <option value="Out for delivery">Out for Delivery</option>
-                  <option value="Delivered">Delivered</option>
-                </select>
+
+                <div className='flex items-center gap-2'>
+                  <span className={`inline-block w-3 h-3 rounded-full ${getStatusColor(order.status)}`}></span>
+
+                  <select onChange={(event)=>statusHandler(event, order._id)} value={order.status} className='border px-3 py-1 rounded'>
+                    <option value="Order Placed">Order Placed</option>
+                    <option value="Packing">Packing</option>
+                    <option value="Shipped">Shipped</option>
+                    <option value="Out for delivery">Out for Delivery</option>
+                    <option value="Out for Delivery">Out for Delivery</option>
+                    <option value="Delivered">Delivered</option>
+                  </select>
+                </div>
               </div>
             </div>
           ))
